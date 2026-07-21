@@ -24,13 +24,13 @@ This is how you can run this script in your Linux system
 
 ```bash
 chmod +x audit.sh
-sudo ./audit.sh
+sudo ./security_audit.sh
 ```
 The generated report is saved in /var/log/security_audits.
 Want it saved somewhere else? run the below command instead.
 
 ```bash
-sudo ./audit.sh ~/reports
+sudo ./security_audit.sh ~/reports
 ```
 
 Each run produces a timestamped file
