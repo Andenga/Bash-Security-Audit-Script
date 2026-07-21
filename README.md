@@ -1,3 +1,2 @@
-# binary_trees    project
-
-Using the C programming
+ Bash Security Audit Script
+`
