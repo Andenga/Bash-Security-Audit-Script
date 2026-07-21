@@ -35,3 +35,5 @@ sudo ./audit.sh ~/reports
 
 Each run produces a timestamped file
 
+When run, it will list any erros available/requirements not met before it starts scanning.
+
