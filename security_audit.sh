@@ -1,24 +1,9 @@
 #!/usr/bin/env bash
-#
-# security_audit.sh
-#
-# Basic Linux security audit script.
-# Checks: world-writable files, failed SSH logins, open ports,
-#         running services, users with no password, SUID binaries.
-#
-# Usage:
-#   sudo ./security_audit.sh [output_dir]
-#
-# Output:
-#   A timestamped report written to <output_dir>/security_audit_<timestamp>.log
-#   (default output_dir: /var/log/security_audits, falls back to ./audit_logs)
-#
 
 set -uo pipefail
 
-# ----------------------------
 # Setup
-# ----------------------------
+
 
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 DEFAULT_OUTDIR="/var/log/security_audits"
@@ -45,9 +30,6 @@ if [ "$(id -u)" -eq 0 ]; then
     IS_ROOT=true
 fi
 
-# ----------------------------
-# Helpers
-# ----------------------------
 
 # Print a section header to both terminal and log
 section() {
@@ -81,9 +63,7 @@ require_root_notice() {
     fi
 }
 
-# ----------------------------
 # Report header
-# ----------------------------
 
 {
     echo "############################################################"
@@ -96,9 +76,7 @@ require_root_notice() {
 
 require_root_notice
 
-# ----------------------------
 # 1. World-writable files
-# ----------------------------
 section "1. World-Writable Files"
 info "Scanning common system directories for world-writable files (this may take a moment)..."
 
@@ -117,9 +95,7 @@ else
     warn "$WW_COUNT world-writable file(s) found. See list above in log."
 fi
 
-# ----------------------------
 # 2. Failed SSH login attempts
-# ----------------------------
 section "2. Failed SSH Login Attempts"
 
 AUTHLOG=""
@@ -158,9 +134,7 @@ else
     warn "Could not locate SSH auth logs (no auth.log, secure, or journalctl available)."
 fi
 
-# ----------------------------
 # 3. Open ports
-# ----------------------------
 section "3. Open Ports / Listening Services"
 
 if command -v ss >/dev/null 2>&1; then
@@ -176,9 +150,7 @@ else
     warn "Neither 'ss' nor 'netstat' found — cannot list open ports."
 fi
 
-# ----------------------------
 # 4. Running services
-# ----------------------------
 section "4. Running Services"
 
 if command -v systemctl >/dev/null 2>&1; then
@@ -192,9 +164,7 @@ else
     warn "No systemctl or service command found — cannot list running services."
 fi
 
-# ----------------------------
 # 5. Users with no password
-# ----------------------------
 section "5. Accounts With No Password Set"
 
 if [ "$IS_ROOT" = true ] && [ -r /etc/shadow ]; then
@@ -213,9 +183,7 @@ else
     warn "Cannot read /etc/shadow (requires root). Skipping empty-password check."
 fi
 
-# ----------------------------
 # 6. SUID binaries
-# ----------------------------
 section "6. SUID Binaries"
 
 info "Scanning for SUID binaries (this may take a moment)..."
@@ -230,9 +198,7 @@ done < <(find $SUID_DIRS -xdev -type f -perm -4000 -not -path "*/proc/*" -print0
 log "Total SUID binaries found: $SUID_COUNT"
 log "(Review this list for anything unexpected or not matching your distro's known-good baseline.)"
 
-# ----------------------------
 # Summary
-# ----------------------------
 section "Summary"
 {
     echo "World-writable files found: $WW_COUNT"
