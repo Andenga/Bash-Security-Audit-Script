@@ -26,7 +26,7 @@ This is how you can run this script in your Linux system
 chmod +x audit.sh
 sudo ./audit.sh
 ```
-
+The generated report is saved in /var/log/security_audits.
 Want it saved somewhere else? run the below command instead.
 
 ```bash
